@@ -66,9 +66,7 @@ public class ProductDAO {
             stmt.setInt(6, product.getMinQuantity());
             stmt.setInt(7, product.getId());
             stmt.executeUpdate();
-            String message = "Product updated: " + product.getName();
-            notifyObservers(message);
-            JOptionPane.showMessageDialog(null, message);
+            notifyObservers("Product updated: " + product.getName());
         }
     }
 
