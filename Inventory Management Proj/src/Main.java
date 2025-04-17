@@ -1,6 +1,7 @@
 import java.util.*;
 
-import javax.swing.JOptionPane;
+import java.awt.GridLayout;
+import javax.swing.*;
 
 import models.Product;
 import dao.ProductDAO;
@@ -61,14 +62,66 @@ public class Main {
                         break;
 
                     case 3:
+                        List<Product> updateCandidates = dao.getAllProducts();
+                        if (updateCandidates.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "No products to update.");
+                            break;
+                        }
+
                         int updateId = Integer.parseInt(JOptionPane.showInputDialog("Enter Product ID to update:"));
-                        String newName = JOptionPane.showInputDialog("New Name:");
-                        int newCatId = Integer.parseInt(JOptionPane.showInputDialog("Category ID:"));
-                        int newSupId = Integer.parseInt(JOptionPane.showInputDialog("Supplier ID:"));
-                        int newQty = Integer.parseInt(JOptionPane.showInputDialog("Quantity:"));
-                        double newPrice = Double.parseDouble(JOptionPane.showInputDialog("Price:"));
-                        int newMinQty = Integer.parseInt(JOptionPane.showInputDialog("Minimum Quantity:"));
-                        dao.updateProduct(ProductFactory.createProduct(updateId, newName, newCatId, newSupId, newQty, newPrice, newMinQty));
+                        Product selected = null;
+                        for (Product p : updateCandidates) {
+                            if (p.getId() == updateId) {
+                                selected = p;
+                                break;
+                            }
+                        }
+                        if (selected == null) {
+                            JOptionPane.showMessageDialog(null, "Product not found.");
+                            break;
+                        }
+
+                        JCheckBox nameBox = new JCheckBox("Update Name");
+                        JTextField nameField = new JTextField(selected.getName());
+                        nameField.setEnabled(false);
+
+                        JCheckBox qtyBox = new JCheckBox("Update Quantity");
+                        JTextField qtyField = new JTextField(String.valueOf(selected.getQuantity()));
+                        qtyField.setEnabled(false);
+
+                        JCheckBox priceBox = new JCheckBox("Update Price");
+                        JTextField priceField = new JTextField(String.valueOf(selected.getPrice()));
+                        priceField.setEnabled(false);
+
+                        nameBox.addActionListener(e -> nameField.setEnabled(nameBox.isSelected()));
+                        qtyBox.addActionListener(e -> qtyField.setEnabled(qtyBox.isSelected()));
+                        priceBox.addActionListener(e -> priceField.setEnabled(priceBox.isSelected()));
+
+                        JPanel panel = new JPanel(new GridLayout(0, 1));
+                        panel.add(nameBox);
+                        panel.add(nameField);
+                        panel.add(qtyBox);
+                        panel.add(qtyField);
+                        panel.add(priceBox);
+                        panel.add(priceField);
+
+                        int result = JOptionPane.showConfirmDialog(null, panel, "Update Product",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                        if (result == JOptionPane.OK_OPTION) {
+                            String newName = selected.getName();
+                            int newQty = selected.getQuantity();
+                            double newPrice = selected.getPrice();
+
+                            if (nameBox.isSelected()) newName = nameField.getText();
+                            if (qtyBox.isSelected()) newQty = Integer.parseInt(qtyField.getText());
+                            if (priceBox.isSelected()) newPrice = Double.parseDouble(priceField.getText());
+
+                            dao.updateProduct(ProductFactory.createProduct(
+                                selected.getId(), newName, selected.getCategoryId(), selected.getSupplierId(),
+                                newQty, newPrice, selected.getMinQuantity()
+                            ));
+                        }
                         break;
 
                     case 4:
