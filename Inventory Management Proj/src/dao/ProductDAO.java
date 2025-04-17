@@ -1,5 +1,7 @@
 package dao;
 
+import javax.swing.JOptionPane;
+
 import observer.ProductObserver;
 import factory.ProductFactory;
 import db.DatabaseConnection;
@@ -82,7 +84,7 @@ public class ProductDAO {
                 rs.close();
     
                 if (count == 0) {
-                    System.out.println("No products found with ID: " + id);
+                    JOptionPane.showMessageDialog(null, "No products found with ID: " + id);
                     return;
                 }
             }

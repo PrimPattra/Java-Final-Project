@@ -36,14 +36,14 @@ public class Main {
                             JOptionPane.showMessageDialog(null, "No products found.");
                         } else {
                             StringBuilder sb = new StringBuilder("Product List:\n");
+                            int index = 1;
                             for (Product p : products) {
-                                sb.append(p.getId())
+                                sb.append(index++)
                                 .append(". ")
                                 .append(p.getName())
-                                .append(" | Qty: ")
-                                .append(p.getQuantity())
-                                .append(" | Price: $")
-                                .append(p.getPrice())
+                                .append(" | ID: ").append(p.getId()) 
+                                .append(" | Qty: ").append(p.getQuantity())
+                                .append(" | Price: $").append(p.getPrice())
                                 .append("\n");
                             }
                             JOptionPane.showMessageDialog(null, sb.toString());
@@ -72,8 +72,28 @@ public class Main {
                         break;
 
                     case 4:
+                        List<Product> allProducts = dao.getAllProducts();
+                        if (allProducts.isEmpty()){
+                            JOptionPane.showMessageDialog(null, "No products to delete.");
+                            break;
+                        }
                         int deleteId = Integer.parseInt(JOptionPane.showInputDialog("Enter Product ID to delete:"));
-                        dao.deleteProduct(deleteId);
+                        Product productToDelete = null;
+                        for (Product p : allProducts) {
+                            if (p.getId() == deleteId) {
+                                productToDelete = p;
+                                break;
+                            }
+                        }
+                        String confirmMsg = "Are you sure you want to delete the following product?\n\n" +
+                        "ID: " + productToDelete.getId() + "\n" +
+                        "Name: " + productToDelete.getName() + "\n" +
+                        "Quantity: " + productToDelete.getQuantity() + "\n" +
+                        "Price: $" + productToDelete.getPrice();
+                        int confirm = JOptionPane.showConfirmDialog(null, confirmMsg, "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            dao.deleteProduct(deleteId);
+                        }
                         break;
 
                     case 5:
