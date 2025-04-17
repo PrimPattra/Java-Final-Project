@@ -9,7 +9,8 @@ public class Product {
     private double price;
     private int minQuantity;
 
-    public Product(int id, String name, int categoryId, int supplierId, int quantity, double price, int minQuantity) {
+    public Product(int id, String name, int categoryId, 
+    int supplierId, int quantity, double price, int minQuantity) {
         this.id = id;
         this.name = name;
         this.categoryId = categoryId;

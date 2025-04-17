@@ -1,6 +1,5 @@
 package dao;
 
-import observer.ConsoleObserver;
 import observer.ProductObserver;
 import factory.ProductFactory;
 import db.DatabaseConnection;
@@ -70,11 +69,32 @@ public class ProductDAO {
     }
 
     public void deleteProduct(int id) throws SQLException {
-        String query = "DELETE FROM products WHERE id=?";
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-            notifyObservers("Product deleted with ID: " + id);
+        String checkQuery = "SELECT COUNT(*) FROM products WHERE id=?";
+        String deleteQuery = "DELETE FROM products WHERE id=?";
+        
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            // Check that id exits or not
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+                checkStmt.setInt(1, id);
+                ResultSet rs = checkStmt.executeQuery();
+                rs.next();
+                int count = rs.getInt(1);
+                rs.close();
+    
+                if (count == 0) {
+                    System.out.println("No products found with ID: " + id);
+                    return;
+                }
+            }
+    
+            // If id exits -> delete
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery)) {
+                deleteStmt.setInt(1, id);
+                int rowsAffected = deleteStmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    notifyObservers("Product deleted with ID: " + id);
+                }
+            }
         }
     }
 }
