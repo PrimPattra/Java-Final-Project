@@ -68,6 +68,7 @@ public class Main {
                             break;
                         }
 
+
                         int updateId = Integer.parseInt(JOptionPane.showInputDialog("Enter Product ID to update:"));
                         Product selected = null;
                         for (Product p : updateCandidates) {
@@ -121,6 +122,16 @@ public class Main {
                                 selected.getId(), newName, selected.getCategoryId(), selected.getSupplierId(),
                                 newQty, newPrice, selected.getMinQuantity()
                             ));
+                            String updatedMsg = "Product updated successfully!\n\n" +
+                                "ID: " + selected.getId() + "\n" +
+                                "Name: " + newName + "\n" +
+                                "Category ID: " + selected.getCategoryId() + "\n" +
+                                "Supplier ID: " + selected.getSupplierId() + "\n" +
+                                "Quantity: " + newQty + "\n" +
+                                "Price: $" + newPrice + "\n" +
+                                "Minimum Qty: " + selected.getMinQuantity();
+
+                            JOptionPane.showMessageDialog(null, updatedMsg, "Updated Product", JOptionPane.INFORMATION_MESSAGE);
                         }
                         break;
 
