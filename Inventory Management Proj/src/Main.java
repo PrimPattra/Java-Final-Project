@@ -131,7 +131,8 @@ public class Main {
                                 "Price: $" + newPrice + "\n" +
                                 "Minimum Qty: " + selected.getMinQuantity();
 
-                            JOptionPane.showMessageDialog(null, updatedMsg, "Updated Product", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, updatedMsg, "Updated Product", 
+                            JOptionPane.INFORMATION_MESSAGE);
                         }
                         break;
 
@@ -148,6 +149,10 @@ public class Main {
                                 productToDelete = p;
                                 break;
                             }
+                        }
+                        if (productToDelete == null) {
+                            JOptionPane.showMessageDialog(null, "No product found with ID: " + deleteId);
+                            break;
                         }
                         String confirmMsg = "Are you sure you want to delete the following product?\n\n" +
                         "ID: " + productToDelete.getId() + "\n" +

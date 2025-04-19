@@ -80,13 +80,6 @@ public class ProductDAO {
                 checkStmt.setInt(1, id);
                 ResultSet rs = checkStmt.executeQuery();
                 rs.next();
-                int count = rs.getInt(1);
-                rs.close();
-    
-                if (count == 0) {
-                    JOptionPane.showMessageDialog(null, "No products found with ID: " + id);
-                    return;
-                }
             }
     
             // If id exits -> delete
